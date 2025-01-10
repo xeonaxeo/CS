@@ -118,7 +118,13 @@
 - **INSERT**: 데이터 삽입.
 - **UPDATE**: 데이터 수정.
 - **DELETE**: 데이터 삭제.
-
+```c
+sqlite3 *db;
+sqlite3_open("example.db", &db);
+sqlite3_exec(db, "CREATE TABLE test (id INT, value TEXT);", NULL, NULL, NULL);
+sqlite3_exec(db, "INSERT INTO test VALUES (1, 'Hello');", NULL, NULL, NULL);
+sqlite3_close(db);
+```
 ### 데이터 제어 언어(DCL)
 
 - **GRANT**: 권한 부여.
@@ -153,7 +159,11 @@
 2. **Read Committed**
 3. **Repeatable Read**
 4. **Serializable**
-
+```c
+sqlite3_exec(db, "BEGIN TRANSACTION;", NULL, NULL, NULL);
+sqlite3_exec(db, "INSERT INTO test VALUES (2, 'Transaction Test');", NULL, NULL, NULL);
+sqlite3_exec(db, "COMMIT;", NULL, NULL, NULL);
+```
 ---
 
 ## 데이터베이스 설계
@@ -192,7 +202,9 @@
 1. **사용자 인증**: 데이터 접근 권한 부여.
 2. **역할 기반 접근**: 역할에 따라 권한 분리.
 3. **데이터 암호화**: 데이터 보안 강화.
-
+```c
+sqlite3_exec(db, "CREATE TABLE test (id INT PRIMARY KEY, value TEXT);", NULL, NULL, NULL);
+```
 ---
 
 ## 데이터베이스 성능 최적화
@@ -214,7 +226,9 @@
 ### 샤딩과 데이터 분산
 
 - 데이터베이스를 다수의 노드로 분산 저장.
-
+```c
+sqlite3_exec(db, "EXPLAIN QUERY PLAN SELECT * FROM test;", NULL, NULL, NULL);
+```
 ---
 
 ## 비관계형 데이터베이스(NoSQL)
@@ -234,7 +248,13 @@
 
 - **CAP 이론**: 일관성, 가용성, 파티션 허용성 간 트레이드오프.
 - **BASE 모델**: 가용성과 성능에 중점.
-
+```c
+redisContext *c = redisConnect("127.0.0.1", 6379);
+redisCommand(c, "SET key 'value'");
+redisReply *reply = redisCommand(c, "GET key");
+printf("Value: %s\n", reply->str);
+redisFree(c);
+```
 ---
 
 ## 분산 데이터베이스
@@ -272,3 +292,9 @@
 ### 데이터베이스 모니터링
 
 - 성능 상태 분석 및 리소스 사용 최적화.
+
+```c
+sqlite3_backup *backup = sqlite3_backup_init(destDb, "main", srcDb, "main");
+sqlite3_backup_step(backup, -1);
+sqlite3_backup_finish(backup);
+```
